@@ -1,77 +1,91 @@
-# Task Manager API
+# Task Manager API (Guided Project)
 
 Brief
-In this guided project, you'll build a RESTful API for managing tasks using Node.js and Express with in-memory storage. Implement CRUD operations, validation, and error handling. Test the API with Postman or curl.
-
-Features
-- Create, read, update, and delete tasks
-- Basic input validation and error responses
-- In-memory data storage (no DB required)
+In this guided project you build a RESTful Task Manager API using Node.js and Express with in-memory storage. The API supports CRUD operations, input validation, filtering, sorting, and a priority attribute.
 
 Prerequisites
 - Node.js (v12+)
 - npm
 
 Setup
-1. Clone the repository:
-   git clone https://github.com/airtribe-projects/task-manager-api-SanjogitaMishra.git
+1. Clone the repo:
+   git clone <your-repo-url>
 
 2. Install dependencies:
    npm install
 
-3. Run automated tests:
+3. Run the API for manual testing:
+   Create a temporary server file that imports `app` and calls `app.listen()`,
+   or use the provided bootstrap if available.
+
+4. Run automated tests (if applicable):
    npm run test
 
 Note:
-This project exports an Express app from `app.js` for automated testing.
-For manual testing with Postman or curl, a temporary server file can be created
-to call `app.listen()`. Automated tests are used for final verification.
+The project exports an Express app from `app.js`. This design supports automated
+testing. For manual testing with Postman or curl, a temporary server bootstrap
+file can be used to start the server.
 
-API Endpoints
+Task schema example
+{
+  "id": 2,
+  "title": "Create a new project",
+  "description": "Create a new project using Magic",
+  "completed": false,
+  "priority": "medium",
+  "createdAt": "2025-01-01T12:00:00.000Z"
+}
 
-Base URL (when running locally, adjust port as needed): http://localhost:3000
+API Base URL
+http://localhost:3000
 
+Endpoints
 
-1) GET /tasks
-- Description: Retrieve all tasks
+GET /tasks
+- Retrieve all tasks.
+- Optional query parameters:
+  - completed=true|false
+  - priority=low|medium|high
+  - sort=createdAt or createdAt:asc|createdAt:desc
 - Example:
-  curl -sS http://localhost:3000/tasks
+  curl -sS "http://localhost:3000/tasks?completed=false&sort=createdAt:desc"
 
-2) GET /tasks/:id
-- Description: Retrieve a task by ID
+GET /tasks/:id
+- Retrieve task by ID.
 - Example:
   curl -sS http://localhost:3000/tasks/1
 
-3) POST /tasks
-- Description: Create a new task
-- Required body: JSON { "title": string, "completed": boolean }
-- Optional: "description": string
+POST /tasks
+- Create a new task. Required body fields: title (non-empty string), description (non-empty string), completed (boolean). Optional: priority (low|medium|high, defaults to medium).
 - Example:
   curl -sS -X POST http://localhost:3000/tasks \
     -H "Content-Type: application/json" \
-    -d '{"title":"New Task","description":"Details","completed":false}'
+    -d '{"title":"New Task","description":"Details","completed":false,"priority":"high"}'
 
-4) PUT /tasks/:id
-- Description: Update task fields (title, description, completed)
+PUT /tasks/:id
+- Update an existing task. Validates fields if provided.
 - Example:
   curl -sS -X PUT http://localhost:3000/tasks/1 \
     -H "Content-Type: application/json" \
-    -d '{"completed":true}'
+    -d '{"completed":true,"priority":"low"}'
 
-5) DELETE /tasks/:id
-- Description: Delete a task by ID
+DELETE /tasks/:id
+- Delete a task by ID.
 - Example:
   curl -sS -X DELETE http://localhost:3000/tasks/1
 
-Behavior & Validation
-- POST requires "title" and "completed" (boolean).
-- PUT validates "completed" if provided (must be boolean).
-- Uses in-memory array for storage; restart clears data.
+GET /tasks/priority/:level
+- Retrieve tasks by priority level (low, medium, high).
+- Example:
+  curl -sS http://localhost:3000/tasks/priority/high
 
-Suggestions / Next steps
-- Add persistent storage (MongoDB, SQLite).
-- Add request logging, tests, and environment-based configuration (PORT).
-- Add pagination and filtering for large task lists.
+Validation & Errors
+- 400 Bad Request for invalid input (missing/empty title or description, completed not boolean, invalid priority, invalid query params).
+- 404 Not Found when a task ID does not exist.
+
+Notes & Next Steps
+- Data is stored in-memory; restarting the server clears tasks.
+- Suggested improvements: add persistent DB (MongoDB/SQLite), request logging, tests, pagination.
 
 License
-Add your preferred license file (e.g., MIT) if needed.
+Add a license file as needed.
