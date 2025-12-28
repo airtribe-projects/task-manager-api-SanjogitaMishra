@@ -15,16 +15,14 @@ Setup
    npm install
 
 3. Run the API for manual testing:
-   Create a temporary server file that imports `app` and calls `app.listen()`,
-   or use the provided bootstrap if available.
+   node server.js
 
 4. Run automated tests (if applicable):
    npm run test
 
 Note:
 The project exports an Express app from `app.js`. This design supports automated
-testing. For manual testing with Postman or curl, a temporary server bootstrap
-file can be used to start the server.
+testing. For manual testing with Postman or curl, use `server.js` to start the server.
 
 Task schema example
 {

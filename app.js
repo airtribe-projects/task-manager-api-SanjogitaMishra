@@ -1,8 +1,9 @@
 const express = require('express');
 const app = express();
-// const port = 3000;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 
 // in memory task storage
 let tasks = [
@@ -46,6 +47,9 @@ app.get('/tasks', (req, res) => {
     // sort support
     if (req.query.sort) {
         const [field, order = 'desc'] = req.query.sort.split(':');
+        if (order !== 'asc' && order !== 'desc') {
+            return res.status(400).json({ error: 'Invalid sort order; use asc or desc' });
+        }
         if (field === 'createdAt') {
             results.sort((a, b) => {
                 const diff = new Date(a.createdAt) - new Date(b.createdAt);
@@ -164,3 +168,4 @@ app.get('/tasks/priority/:level', (req, res) => {
 });
 
 module.exports = app;
+
